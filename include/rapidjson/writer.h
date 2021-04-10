@@ -208,9 +208,15 @@ public:
     }
 
 #if RAPIDJSON_HAS_STDSTRING
+#if __cplusplus >= 201703L
+    bool String(std::basic_string_view<Ch> str) {
+        return String(str.data(), SizeType(str.size()));
+    }
+#else
     bool String(const std::basic_string<Ch>& str) {
         return String(str.data(), SizeType(str.size()));
     }
+#endif
 #endif
 
     bool StartObject() {
@@ -222,10 +228,15 @@ public:
     bool Key(const Ch* str, SizeType length, bool copy = false) { return String(str, length, copy); }
 
 #if RAPIDJSON_HAS_STDSTRING
-    bool Key(const std::basic_string<Ch>& str)
-    {
+#if __cplusplus >= 201703L
+    bool Key(std::basic_string_view<Ch> str) {
+        return Key(str.data(), SizeType(str.size()));
+    }
+#else
+    bool Key(const std::basic_string<Ch>& str) {
       return Key(str.data(), SizeType(str.size()));
     }
+#endif
 #endif
 
     bool EndObject(SizeType memberCount = 0) {
